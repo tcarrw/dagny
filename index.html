@@ -13,7 +13,7 @@
     --muted:#cfcfe2;
     --pink:#ff39a8;          /* neon pink */
     --pink2:#ff79c6;         /* soft neon */
-    --amber:#ffd089;         /* warning/caution */
+    --amber:#ffd089;         /* caution */
     --green:#73e3c5;         /* clear signal */
     --ring:#1a1a1a;
     --card:#0f0f12f2;
@@ -98,6 +98,25 @@
   .btn:hover{ transform:translateY(-1px); filter:brightness(1.06)}
   .btn.secondary{ background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04)) }
 
+  /* Harbor → Dagny handshake banner */
+  .handshake{
+    border:1px solid rgba(255,255,255,.28);
+    border-left:4px solid var(--green);
+    background:linear-gradient(180deg, rgba(115,227,197,.12), rgba(115,227,197,.06));
+    color:#eafff8;
+    border-radius:10px;
+    padding:10px 12px;
+    display:none;        /* hidden until green */
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+    font-size:13px;
+    margin-top:8px;
+  }
+  .handshake .stamp{
+    font:700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color:#cffff3;
+    margin-left:8px;
+  }
+
   /* motion stage */
   .stage{
     display:grid; grid-template-columns: 1.2fr .8fr; gap:12px;
@@ -173,6 +192,11 @@
           </div>
         </div>
       </div>
+
+      <!-- Harbor → Dagny handshake (shows when green) -->
+      <div id="handshake" class="handshake">
+        Harbor → Dagny handshake: <span class="stamp" id="handshake-time">—</span>
+      </div>
     </section>
 
     <!-- MOTION STAGE -->
@@ -220,23 +244,43 @@
 
 <script>
   (function(){
-    // ---------- Harbor status ----------
     function truthy(v){
-      if(v===null||v===undefined) return false;
-      var s = String(v).toLowerCase().trim();
-      return !(s==="" || s==="0" || s==="false" || s==="null" || s==="undefined");
+      if(v==null) return false;
+      var s=String(v).toLowerCase().trim();
+      return !(s===""||s==="0"||s==="false"||s==="null"||s==="undefined");
     }
+
+    // ---------- Harbor status ----------
     var credit  = truthy(localStorage.getItem("harbor.credit"));
     var consent = truthy(localStorage.getItem("harbor.consent"));
     var resource= truthy(localStorage.getItem("harbor.resource"));
-
     var allClear = credit && consent && resource;
+
     var ring = document.getElementById("ring");
     var stateCopy = document.getElementById("state-copy");
     var stateSub  = document.getElementById("state-sub");
     var explain   = document.getElementById("explain");
     var stage     = document.getElementById("stage");
     var toHarbor  = document.getElementById("to-harbor");
+
+    // Handshake banner elements
+    var handshake = document.getElementById("handshake");
+    var handshakeTime = document.getElementById("handshake-time");
+
+    function showHandshake(on){
+      if(!handshake || !handshakeTime) return;
+      if(on){
+        var human = localStorage.getItem("harbor.lastClearedHuman") || "";
+        if(!human){
+          var iso = localStorage.getItem("harbor.lastCleared");
+          try{ if(iso){ human = new Date(iso).toLocaleString(); } }catch(e){}
+        }
+        handshakeTime.textContent = human || "now";
+        handshake.style.display = "block";
+      }else{
+        handshake.style.display = "none";
+      }
+    }
 
     if(allClear){
       ring.classList.remove("warn");
@@ -246,6 +290,7 @@
       explain.textContent = 'You’re clear. The pink floor is open — pick a track or add a Joy Log entry.';
       toHarbor.textContent = 'Review Harbor';
       unlockStage(true);
+      showHandshake(true);
     }else{
       ring.classList.remove("ok");
       ring.classList.add("warn");
@@ -257,12 +302,17 @@
       stateSub.textContent = missing.join(" · ");
       explain.textContent = 'Finish clearance in Harbor before starting motion.';
       unlockStage(false);
+      showHandshake(false);
     }
 
     function unlockStage(on){
       var plays = stage.querySelectorAll(".play");
       var badges= stage.querySelectorAll(".badge");
-      plays.forEach(function(a){ a.setAttribute("aria-disabled", on? "false":"true"); a.style.opacity = on? "1":"0.55"; a.style.pointerEvents = on? "auto":"none"; });
+      plays.forEach(function(a){
+        a.setAttribute("aria-disabled", on? "false":"true");
+        a.style.opacity = on? "1":"0.55";
+        a.style.pointerEvents = on? "auto":"none";
+      });
       badges.forEach(function(b,i){
         if(on){ b.classList.add("ok"); b.textContent = i===0 ? "PINK FLOOR · CLEAR" : "PINK FLOOR"; }
         else { b.classList.remove("ok"); b.textContent = i===0 ? "PINK FLOOR · LOCKED" : "PINK FLOOR"; }

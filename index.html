@@ -1,453 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dagny — Joy in Motion</title>
-<meta name="description" content="Dagny is motion and joy. Harbor + School clearance opens the pink floor." />
-<!-- dagny · joy in motion -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dagny.plnt.earth – Harbor Light</title>
 <style>
-  :root{
-    --bg:#0a0a0a; --ink:#ffffff; --muted:#cfcfe2;
-    --pink:#ff39a8; --amber:#ffd089; --green:#73e3c5; --grid:#1e1e25;
-    --shadow:0 10px 30px rgba(0,0,0,.55);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--ink);
-    background:
-      repeating-linear-gradient(45deg, #111 0 22px, #000 22px 44px),
-      repeating-conic-gradient(#000 0 25%, #fff 0 50%) 0 0 / 28px 28px;
-    font:500 16px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  }
-  .wrap{max-width:1100px; margin:0 auto; padding:22px; display:grid; gap:14px}
-
-  .hdr{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
-  .title{font-weight:900; font-size:26px; letter-spacing:.4px; text-transform:uppercase}
-  .tag{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.35); background:rgba(0,0,0,.35)}
-  .bee{margin-top:6px; font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.35); display:inline-block}
-
-  .card{
-    background:linear-gradient(180deg, rgba(12,12,16,.92), rgba(10,10,14,.92));
-    border:1px solid rgba(255,255,255,.18);
-    border-radius:16px; padding:16px; box-shadow:var(--shadow);
-    backdrop-filter:saturate(130%) blur(6px);
-  }
-  h2{margin:0 0 8px 0; font-size:18px; letter-spacing:.2px}
-  .muted{color:var(--muted); font-size:14px}
-  .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-
-  .status{display:grid; grid-template-columns: 200px 1fr; gap:16px; align-items:center}
-  @media (max-width:760px){ .status{grid-template-columns:1fr} }
-  .ring{
-    position:relative; width:200px; height:200px; border-radius:50%;
-    background: radial-gradient(60px at 50% 52%, #131313 0%, #0a0a0a 60%);
-    border:2px solid var(--grid);
-    box-shadow: inset 0 0 24px rgba(255,255,255,.05), 0 0 0 6px rgba(255,57,168,.05);
-    display:flex; align-items:center; justify-content:center; text-align:center; padding:16px;
-  }
-  .ring::before,.ring::after{content:""; position:absolute; inset:-8px; border-radius:50%; border:2px dashed rgba(255,255,255,.12); animation:spin 16s linear infinite}
-  .ring::after{ inset:-16px; opacity:.35; animation-duration:24s }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .state{font-weight:900; letter-spacing:.12em; text-transform:uppercase; font-size:11px; color:#ffeaff}
-  .state b{display:block; font-size:14px; letter-spacing:.18em; color:#fff}
-  .substate{display:block; color:var(--muted); font-size:12px; margin-top:6px}
-  .ring.ok{ box-shadow: inset 0 0 30px rgba(115,227,197,.15), 0 0 0 6px rgba(115,227,197,.08), 0 0 40px rgba(115,227,197,.25); border-color:rgba(115,227,197,.6)}
-  .ring.warn{ box-shadow: inset 0 0 30px rgba(255,208,137,.10), 0 0 0 6px rgba(255,208,137,.08), 0 0 40px rgba(255,57,168,.25); border-color:rgba(255,208,137,.55)}
-
-  .chip{
-    font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.35); color:#fff
-  }
-  .chip.ok{ border-color:rgba(115,227,197,.85); color:#eafff8; background:rgba(121,224,200,.12) }
-  .chip.warn{ border-color:rgba(255,208,137,.85); color:#fff3dc; background:rgba(255,208,137,.1) }
-
-  .switch{ position:relative; width:52px; height:28px; border-radius:999px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.08); cursor:pointer }
-  .switch .knob{ position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.35); transition:.15s }
-  .switch.on{ border-color:rgba(255,57,168,.6); background:linear-gradient(180deg, rgba(255,57,168,.18), rgba(255,57,168,.08)) }
-  .switch.on .knob{ left:27px }
-
-  .btn{
-    display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; text-decoration:none; cursor:pointer;
-    border:1px solid rgba(255,255,255,.35); color:#fff; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
-    background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-  }
-  .btn.pink{ border-color:rgba(255,57,168,.55); background:linear-gradient(180deg, rgba(255,57,168,.16), rgba(255,57,168,.06)) }
-
-  /* handshake banner */
-  .handshake{border:1px solid rgba(255,255,255,.28); border-left:4px solid var(--green); background:linear-gradient(180deg, rgba(115,227,197,.12), rgba(115,227,197,.06)); color:#eafff8; border-radius:10px; padding:10px 12px; display:none; box-shadow:0 6px 18px rgba(0,0,0,.35); font-size:13px; margin-top:8px }
-  .handshake .stamp{ font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; color:#cffff3; margin-left:8px }
-
-  /* stage + queue */
-  .stage{ display:grid; grid-template-columns: 1.2fr .8fr; gap:12px }
-  @media (max-width:900px){ .stage{ grid-template-columns:1fr } }
-  .float{ position:absolute; inset:0; pointer-events:none; overflow:hidden; border-radius:14px }
-  .dot{ position:absolute; width:8px; height:8px; border-radius:50%; background: radial-gradient(circle at 30% 30%, #fff 0 35%, var(--pink) 36% 100%); opacity:.8; animation:rise 9s linear infinite }
-  @keyframes rise{ 0%{ transform:translateY(10px) scale(.8); opacity:0 } 12%{opacity:1} 100%{ transform:translateY(-120%) scale(1); opacity:0 } }
-
-  .queue .track{ display:flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:10px; margin:8px 0; background:rgba(255,255,255,.04) }
-  .titleRow{ display:flex; align-items:center; gap:10px }
-  .badge{ padding:3px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.35); font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; color:#ffd9f4 }
-  .badge.ok{ border-color:rgba(115,227,197,.75); color:#e6fff8 }
-  .play{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.35); text-decoration:none; color:#fff; background:rgba(255,255,255,.06) }
-  .play:hover{ filter:brightness(1.06) }
-  .pad{ border:1px solid rgba(255,255,255,.28); border-radius:12px; padding:10px; min-height:90px; background:rgba(0,0,0,.35); outline:none; color:#fff }
-
-  .embed-wrap{ display:none; margin-top:10px }
-  iframe{ width:100%; height:340px; border:0; border-radius:12px; }
-
-  .foot{ text-align:center; color:var(--muted); font-size:12px; padding:8px 0 16px }
+html,body{
+  margin:0;padding:0;
+  height:100%;width:100%;
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  background:linear-gradient(to top,#cbe9ff 0%,#f7fbff 60%,#ffffff 100%);
+  color:#2b2b2b;
+  overflow:hidden;
+}
+.wave{
+  position:absolute;
+  bottom:0;left:0;width:200%;height:40%;
+  background:rgba(255,255,255,0.8);
+  border-radius:100% 100% 0 0;
+  animation:move 18s ease-in-out infinite alternate;
+  box-shadow:inset 0 8px 20px rgba(0,0,0,0.05);
+}
+@keyframes move{
+  from{transform:translateX(0);}
+  to{transform:translateX(-25%);}
+}
+.text{
+  position:absolute;
+  top:40%;left:50%;
+  transform:translate(-50%,-40%);
+  text-align:center;
+  max-width:640px;
+  padding:1rem;
+}
+h1{
+  font-weight:500;
+  color:#006ea8;
+  letter-spacing:0.05em;
+  margin-bottom:1rem;
+}
+p{
+  font-size:1.1rem;
+  line-height:1.6;
+}
+footer{
+  position:absolute;
+  bottom:2%;
+  width:100%;
+  text-align:center;
+  font-size:0.8rem;
+  color:#555;
+  opacity:0.6;
+}
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <header class="hdr">
-      <div>
-        <div class="title">Dagny</div>
-        <div id="bee-line" class="bee">—</div>
-      </div>
-      <div class="tag">joy · motion · pink floor</div>
-    </header>
-
-    <!-- STATUS -->
-    <section class="card">
-      <h2>Status</h2>
-      <p class="muted">Harbor + School clear the floor. When both are green, the pink floor opens.</p>
-      <div class="status">
-        <div class="ring warn" id="ring">
-          <div>
-            <div class="state" id="state-copy">Harbor + School<b>Awaiting clearance</b></div>
-            <span class="substate" id="state-sub">credit · consent · resource · inspector</span>
-          </div>
-        </div>
-        <div>
-          <div class="row" style="justify-content:space-between">
-            <div class="row">
-              <span id="harbor-chip" class="chip warn">harbor: pending</span>
-              <span id="inspector-chip" class="chip warn">inspector: in progress</span>
-            </div>
-            <div class="row">
-              <span class="chip" style="display:flex; align-items:center; gap:8px">Auto-Arm
-                <span id="auto" class="switch" role="switch" aria-checked="false" tabindex="0"><span class="knob"></span></span>
-              </span>
-            </div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <a class="btn" href="https://harbor.plnt.earth" rel="noopener">Open Harbor</a>
-            <a class="btn" href="https://school.plnt.earth/inspector/" rel="noopener">Open Inspector</a>
-            <a class="btn pink" href="https://bridge.plnt.earth" rel="noopener">Bridge</a>
-            <button id="reset-handshake" class="btn" type="button">Reset handshake</button>
-          </div>
-        </div>
-      </div>
-      <div id="handshake" class="handshake">Harbor → Dagny handshake: <span class="stamp" id="handshake-time">—</span></div>
-    </section>
-
-    <!-- STAGE -->
-    <section class="card" id="stage">
-      <div class="float" aria-hidden="true" id="float"></div>
-      <h2>Pink Floor</h2>
-      <p class="muted" id="stage-hint">When Harbor + School are green, this queue unlocks — motion without chase.</p>
-
-      <div class="stage">
-        <!-- Left: Queue (links + optional embed) -->
-        <div>
-          <div class="row" style="justify-content:space-between">
-            <div class="row">
-              <label style="display:flex; align-items:center; gap:8px">
-                <input id="embedOn" type="checkbox"> Use embedded player
-              </label>
-            </div>
-            <div class="row">
-              <button id="edit-toggle" class="btn" type="button">Edit Queue</button>
-            </div>
-          </div>
-
-          <div id="embedWrap" class="embed-wrap">
-            <iframe id="ytPlayer" allow="autoplay; encrypted-media; picture-in-picture; clipboard-write; airplay" allowfullscreen></iframe>
-            <div class="row" style="margin-top:8px">
-              <button id="prev" class="btn" type="button">Prev</button>
-              <button id="next" class="btn" type="button">Next</button>
-            </div>
-          </div>
-
-          <div id="queueLinks" class="queue" style="margin-top:10px">
-            <!-- link rows rendered here -->
-          </div>
-
-          <!-- Editor (local only) -->
-          <div id="editor" class="card" style="margin-top:12px; display:none">
-            <h2>Edit Queue (local)</h2>
-            <p class="muted">One item per line as <strong>Title | YouTubeID</strong>. Example: <em>I Love You Like That | u5S3p5l5a2A</em></p>
-            <div id="qpad" class="pad" contenteditable="true" spellcheck="false"></div>
-            <div class="row" style="margin-top:8px; justify-content:flex-end">
-              <button id="saveQ" class="btn pink" type="button">Save Queue</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Joy Log -->
-        <aside>
-          <h3>Joy Log</h3>
-          <div id="pad" class="pad" contenteditable="true" spellcheck="true" aria-label="What did you move today?"></div>
-          <div class="row" style="margin-top:8px; justify-content:space-between">
-            <span id="count" class="chip">0 chars</span>
-            <button id="add" class="btn" type="button">Add Entry</button>
-          </div>
-          <div class="queue" id="items" style="margin-top:10px"></div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- FOOT -->
-    <footer class="foot">
-      Harbor (Sanela) + School (Taylor) → Dagny (Motion) · <em>Every clearance becomes dance.</em>
-    </footer>
-  </main>
-
-<script>
-(function(){
-  // ---------- helpers ----------
-  function truthy(v){ if(v==null) return false; var s=String(v).toLowerCase().trim(); return !(s===""||s==="0"||s==="false"||s==="null"||s==="undefined"); }
-  function getJSON(key, fallback){ try{ var raw=localStorage.getItem(key); if(!raw) return fallback; var v=JSON.parse(raw); return v&&typeof v==="object"? v : fallback; }catch(e){ return fallback; } }
-  function setJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
-
-  // ---------- chips + gate ----------
-  var ring = document.getElementById('ring');
-  var stateCopy = document.getElementById('state-copy');
-  var stateSub  = document.getElementById('state-sub');
-  var harborChip = document.getElementById('harbor-chip');
-  var inspChip = document.getElementById('inspector-chip');
-  var handshake = document.getElementById('handshake');
-  var handshakeTime = document.getElementById('handshake-time');
-  var auto = document.getElementById('auto');
-  var stage = document.getElementById('stage');
-  var stageHint = document.getElementById('stage-hint');
-
-  function isHarborGreen(){
-    var c = truthy(localStorage.getItem('harbor.credit'));
-    var s = truthy(localStorage.getItem('harbor.consent'));
-    var r = truthy(localStorage.getItem('harbor.resource'));
-    return c && s && r;
-  }
-  function isSchoolReady(){
-    var s = getJSON('illumina.afg.v1', {});
-    return !!s.school;
-  }
-
-  var harborAll = isHarborGreen();
-  var schoolReady = isSchoolReady();
-  var allClear = harborAll && schoolReady;
-
-  harborChip.textContent = harborAll ? 'harbor: green' : 'harbor: pending';
-  harborChip.classList.toggle('ok', harborAll); harborChip.classList.toggle('warn', !harborAll);
-  inspChip.textContent = schoolReady ? 'inspector: ready' : 'inspector: in progress';
-  inspChip.classList.toggle('ok', schoolReady); inspChip.classList.toggle('warn', !schoolReady);
-
-  function showHandshake(on){
-    if(on){
-      var human = localStorage.getItem('harbor.lastClearedHuman')||'';
-      if(!human){
-        var iso = localStorage.getItem('harbor.lastCleared');
-        try{ if(iso){ human = new Date(iso).toLocaleString(); } }catch(e){}
-      }
-      handshakeTime.textContent = human || 'now';
-      handshake.style.display = 'block';
-    }else{
-      handshake.style.display = 'none';
-    }
-  }
-
-  function updateGate(){
-    harborAll = isHarborGreen();
-    schoolReady = isSchoolReady();
-    allClear = harborAll && schoolReady;
-
-    if(allClear){
-      ring.classList.remove('warn'); ring.classList.add('ok');
-      stateCopy.innerHTML = 'Clear for Motion<b>Harbor + Inspector</b>';
-      stateSub.textContent = 'all green';
-      stageHint.textContent = 'Clear for Motion — Harbor confirmed · Inspector ready.';
-      showHandshake(true);
-      unlockStage(true); confetti(true);
-    }else{
-      ring.classList.remove('ok'); ring.classList.add('warn');
-      var missing = [];
-      if(!harborAll) missing.push('harbor');
-      if(!schoolReady) missing.push('inspector');
-      stateCopy.innerHTML = 'Harbor + School<b>Awaiting clearance</b>';
-      stateSub.textContent = missing.join(' · ');
-      stageHint.textContent = 'Harbor + School needed → Open Harbor / Open Inspector.';
-      showHandshake(false);
-      unlockStage(false); confetti(false);
-    }
-  }
-
-  // ---------- Auto-Arm ----------
-  var autoOn = localStorage.getItem('dagny.autoArm')==='true';
-  function renderAuto(){ auto.classList.toggle('on', autoOn); auto.setAttribute('aria-checked', autoOn?'true':'false'); }
-  function saveAuto(){ try{ localStorage.setItem('dagny.autoArm', autoOn?'true':'false'); }catch(e){} }
-  function toggleAuto(){ autoOn=!autoOn; renderAuto(); saveAuto(); maybeAutoArm(); }
-  auto.addEventListener('click', toggleAuto, {passive:true});
-  auto.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggleAuto(); }});
-  renderAuto();
-
-  function maybeAutoArm(){
-    if(autoOn && harborAll && schoolReady){
-      // visually ensure it's open
-      unlockStage(true); confetti(true);
-    }
-  }
-
-  // ---------- Reset handshake ----------
-  document.getElementById('reset-handshake').addEventListener('click', function(){
-    try{ ['harbor.lastCleared','harbor.lastClearedHuman'].forEach(k=>localStorage.removeItem(k)); }catch(e){}
-    showHandshake(false);
-  }, {passive:true});
-
-  // ---------- Queue + embed ----------
-  var defaultQueue = [
-    {title:'I Love You Like That', yt:'u5S3p5l5a2A'},
-    {title:'Somebody', yt:'Vx0uS7Zk8BQ'},
-    {title:'Brightsider', yt:'9zQ6hJxk3K8'}
-  ];
-  function loadQueue(){
-    try{
-      var q = JSON.parse(localStorage.getItem('dagny.queue.v1')||'[]');
-      if(!Array.isArray(q) || !q.length) return defaultQueue;
-      return q.filter(x=>x && x.title && x.yt);
-    }catch(e){ return defaultQueue; }
-  }
-  var queue = loadQueue(), idx = 0;
-  var qLinks = document.getElementById('queueLinks');
-  function renderLinks(){
-    qLinks.innerHTML = '';
-    queue.forEach(function(item,i){
-      var row = document.createElement('div'); row.className='track';
-      var left = document.createElement('div'); left.className='titleRow';
-      var b = document.createElement('span'); b.className='badge'; b.textContent='PINK FLOOR';
-      var t = document.createElement('span'); t.textContent = item.title;
-      left.appendChild(b); left.appendChild(t);
-      var a = document.createElement('a'); a.className='play'; a.target='_blank'; a.rel='noopener';
-      a.href = 'https://www.youtube.com/watch?v=' + item.yt;
-      a.textContent='Play';
-      row.appendChild(left); row.appendChild(a);
-      qLinks.appendChild(row);
-    });
-  }
-  renderLinks();
-
-  var embedOn = document.getElementById('embedOn');
-  var embedWrap = document.getElementById('embedWrap');
-  var yt = document.getElementById('ytPlayer');
-  function loadYT(i){
-    idx = (i+queue.length)%queue.length;
-    var id = queue[idx].yt;
-    yt.src = 'https://www.youtube.com/embed/'+id+'?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1';
-  }
-  embedOn.addEventListener('change', function(){
-    var on = embedOn.checked;
-    embedWrap.style.display = on ? 'block':'none';
-    if(on){ loadYT(idx); }
-  }, {passive:true});
-  document.getElementById('prev').addEventListener('click', function(){ loadYT(idx-1); }, {passive:true});
-  document.getElementById('next').addEventListener('click', function(){ loadYT(idx+1); }, {passive:true});
-
-  // Queue editor
-  var editor = document.getElementById('editor');
-  var qpad = document.getElementById('qpad');
-  document.getElementById('edit-toggle').addEventListener('click', function(){
-    editor.style.display = editor.style.display==='none' ? 'block' : 'none';
-    if(editor.style.display==='block'){
-      qpad.textContent = (queue||[]).map(it=> (it.title||'')+' | '+(it.yt||'')).join('\n');
-    }
-  }, {passive:true});
-  document.getElementById('saveQ').addEventListener('click', function(){
-    var lines = (qpad.textContent||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    var next = [];
-    lines.forEach(function(line){
-      var m = line.split('|');
-      if(m.length>=2){
-        var title = m[0].trim(); var yt = m[1].trim().replace(/^.*v=|^.*be\//,'');
-        if(title && yt) next.push({title, yt});
-      }
-    });
-    if(next.length){ queue = next; try{ localStorage.setItem('dagny.queue.v1', JSON.stringify(queue)); }catch(e){} renderLinks(); if(embedOn.checked){ loadYT(idx=0); } }
-  }, {passive:true});
-
-  // ---------- Joy Log ----------
-  var pad = document.getElementById('pad'), count = document.getElementById('count'), items = document.getElementById('items');
-  function updateCount(){ count.textContent = (pad.textContent||'').length + ' chars'; }
-  function renderItems(){
-    items.innerHTML = '';
-    var list = []; try{ list = JSON.parse(localStorage.getItem('dagny.log.v1')||'[]'); }catch(e){}
-    list.forEach(function(it){
-      var d = document.createElement('div'); d.className='track';
-      var l = document.createElement('div'); l.textContent = it.text;
-      var s = document.createElement('span'); s.className='chip'; s.textContent = it.when;
-      d.appendChild(l); d.appendChild(s); items.appendChild(d);
-    });
-  }
-  renderItems(); updateCount();
-  document.getElementById('add').addEventListener('click', function(){
-    var t = (pad.textContent||'').trim(); if(!t) return;
-    var list = []; try{ list = JSON.parse(localStorage.getItem('dagny.log.v1')||'[]'); }catch(e){}
-    list.unshift({ when: new Date().toLocaleString(), text: t });
-    try{ localStorage.setItem('dagny.log.v1', JSON.stringify(list)); }catch(e){}
-    pad.textContent=''; updateCount(); renderItems();
-  }, {passive:true});
-  pad.addEventListener('input', updateCount, {passive:true});
-
-  // ---------- Confetti ----------
-  function confetti(on){
-    var box = document.getElementById('float'); box.innerHTML='';
-    if(!on) return;
-    for(var i=0;i<24;i++){
-      var dot = document.createElement('div'); dot.className='dot';
-      dot.style.left = (Math.random()*100)+'%'; dot.style.bottom='-12px';
-      dot.style.animationDelay = (Math.random()*6).toFixed(2)+'s';
-      dot.style.animationDuration = (7+Math.random()*5).toFixed(2)+'s';
-      dot.style.filter = 'hue-rotate('+(Math.random()*20-10)+'deg)';
-      box.appendChild(dot);
-    }
-  }
-
-  // ---------- Bee line ----------
-  (function(){
-    var raw = localStorage.getItem('school.kit.no')||'';
-    var txt = raw.replace(/<[^>]*>/g,'').trim();
-    var bee = document.getElementById('bee-line');
-    if(txt){ bee.textContent = txt; bee.classList.add('chip','ok'); } else { bee.textContent='—'; bee.classList.add('chip'); }
-  })();
-
-  // ---------- Unlock UX ----------
-  function unlockStage(on){
-    // enable/disable links and embed controls
-    var plays = document.querySelectorAll('.play');
-    plays.forEach(function(a){
-      a.setAttribute('aria-disabled', on? 'false':'true');
-      a.style.opacity = on? '1':'0.55';
-      a.style.pointerEvents = on? 'auto':'none';
-    });
-    document.getElementById('embedOn').disabled = !on;
-    document.getElementById('prev').disabled = !on;
-    document.getElementById('next').disabled = !on;
-  }
-
-  // initial render + auto-arm
-  updateGate();
-  var autoOn = localStorage.getItem('dagny.autoArm')==='true';
-  function renderAuto(){ auto.classList.toggle('on', autoOn); auto.setAttribute('aria-checked', autoOn?'true':'false'); }
-  function saveAuto(){ try{ localStorage.setItem('dagny.autoArm', autoOn?'true':'false'); }catch(e){} }
-  function toggleAuto(){ autoOn=!autoOn; renderAuto(); saveAuto(); maybeAutoArm(); }
-  auto.removeEventListener('click', toggleAuto); // ensure no dup
-  auto.addEventListener('click', toggleAuto, {passive:true});
-  auto.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggleAuto(); }});
-  renderAuto();
-  function maybeAutoArm(){ if(autoOn && allClear){ unlockStage(true); confetti(true); if(embedOn.checked){ loadYT(0); } } }
-  maybeAutoArm();
-
-})();
-</script>
+<div class="wave"></div>
+<div class="text">
+  <h1>Dagny – Harbor Light</h1>
+  <p>
+    The docks hum quietly,<br>
+    gulls thread the morning air.<br><br>
+    She rides a melody between masts,<br>
+    her voice part tide, part electricity.<br><br>
+    Somewhere, someone hums back.<br>
+    The city hears her before it wakes.
+  </p>
+</div>
+<footer>dagny.plnt.earth © 2025</footer>
 </body>
 </html>

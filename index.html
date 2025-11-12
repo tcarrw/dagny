@@ -10,29 +10,116 @@
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#000000">
 
 <style>
 html,body{
   margin:0;
   height:100%;
   width:100%;
-  background:#000;
-  background-size:200% 200%;
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  animation:lumipulse 180s ease-in-out infinite alternate;
-  color-scheme:dark;
-  color:#222;
+  background:#a8f1d3;
+  color:#111;
   font-family:'Helvetica Neue',sans-serif;
-  overflow:hidden;
+  overflow-x:hidden;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
   text-align:center;
-  position:relative;
+  padding-top:4.5rem;
+  padding-bottom:6rem;
   transition:background 1.5s ease-in-out,color 1.5s ease-in-out;
+}
+
+/* text hierarchy */
+h1{
+  font-weight:600;
+  font-size:1.35rem;
+  margin:0 0 0.3rem 0;
+}
+p{
+  font-style:italic;
+  font-size:1rem;
+  opacity:0.7;
+  margin:0 0 1.8rem 0;
+  line-height:1.4;
+}
+
+/* pulsing ring */
+.ring{
+  position:absolute;
+  top:160px;
+  width:120px;height:120px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.4);
+  animation:pulse 6s ease-in-out infinite;
+  z-index:1;
+  opacity:0.5;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(0.9);opacity:0.4;filter:brightness(1);}
+  50%{transform:scale(1.2);opacity:0.8;filter:brightness(1.1);}
+}
+
+/* play button */
+button{
+  background:rgba(255,255,255,0.25);
+  border:none;
+  border-radius:50%;
+  width:80px;height:80px;
+  font-size:1.5rem;
+  color:#111;
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+  transition:all 0.5s ease;
+  z-index:2;
+  margin-bottom:2rem;
+}
+button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
+
+/* YouTube player */
+#player{
+  width:85vw;
+  max-width:420px;
+  aspect-ratio:16/9;
+  border:none;
+  border-radius:12px;
+  margin:0 auto 2.2rem auto;
+  display:block;
+  opacity:0;
+  transition:opacity 2s ease-in-out;
+}
+
+/* Motion link + mantra */
+#motion{
+  margin-top:1rem;
+  font-size:1.05rem;
+  font-weight:500;
+  letter-spacing:0.3px;
+  opacity:0;
+  transition:opacity 6s ease-in;
+}
+#motion a{
+  color:#000;
+  text-decoration:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+  opacity:0.6;
+  transition:opacity 0.3s ease, border-bottom-color 0.3s ease;
+}
+#motion a:hover,
+#motion a:focus{
+  opacity:1;
+  border-bottom-color:#000;
+}
+#motion.show{opacity:1;}
+
+#mantra{
+  font-size:0.9rem;
+  letter-spacing:0.8px;
+  opacity:0.7;
+  font-style:italic;
+  line-height:1.6;
+  margin-top:2rem;
+  padding:0 1rem;
 }
 
 /* fade from black to mint */
@@ -47,89 +134,10 @@ html,body{
   50%{filter:brightness(1.1);}
   100%{filter:brightness(1);}
 }
-
-/* text */
-h1{font-weight:600;font-size:1.3rem;margin:1rem 0 0.5rem 0;}
-p{font-style:italic;opacity:0.8;margin:0 1rem 2rem 1rem;}
-
-/* pulsing ring */
-.ring{
-  position:absolute;
-  width:120px;height:120px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,0.4);
-  animation:pulse 6s ease-in-out infinite;
-  z-index:1;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(0.9);opacity:0.4;filter:brightness(1);}
-  50%{transform:scale(1.2);opacity:0.8;filter:brightness(1.1);}
-}
-
-/* play button */
-button{
-  background:rgba(255,255,255,0.3);
-  border:none;
-  border-radius:50%;
-  width:80px;height:80px;
-  font-size:1.5rem;
-  color:#222;
-  backdrop-filter:blur(10px);
-  cursor:pointer;
-  transition:all 0.5s ease;
-  z-index:2;
-}
-button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
-
-/* YouTube player */
-#player{
-  opacity:0;
-  width:320px;
-  height:180px;
-  border:none;
-  border-radius:12px;
-  margin-top:1.5rem;
-  transition:opacity 2s ease-in-out;
-  position:relative;
-  z-index:0;
-}
-
-/* Motion link */
-#motion{
-  position:fixed;
-  bottom:3.5rem;
-  opacity:0;
-  font-size:1.05rem;
-  font-weight:500;
-  letter-spacing:0.4px;
-  color:#222;
-  transition:opacity 6s ease-in;
-}
-#motion.show{opacity:1;}
-#motion a{
-  color:inherit;
-  text-decoration:none;
-  border-bottom:1px solid rgba(0,0,0,0.2);
-}
-#motion a:hover{border-bottom:1px solid #222;}
-
-/* Mint-Night Mantra */
-#mantra{
-  position:fixed;
-  bottom:0.8rem;
-  width:100%;
-  text-align:center;
-  opacity:0;
-  color:rgba(0,0,0,0.45);
-  font-size:0.85rem;
-  letter-spacing:1.2px;
-  transition:opacity 10s ease-in;
-  font-style:italic;
-}
-#mantra.show{opacity:1;}
 </style>
 </head>
 <body>
+
 <h1>Dagny — Bye Bye Baby</h1>
 <p>I begin to move again.<br>Mint breath in rhythm.</p>
 
@@ -159,7 +167,6 @@ const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
 const motion=document.getElementById('motion');
-const mantra=document.getElementById('mantra');
 let started=false;
 
 playBtn.addEventListener('click',()=>{
@@ -167,24 +174,19 @@ playBtn.addEventListener('click',()=>{
   ring.style.opacity='0';
   setTimeout(()=>{playBtn.style.display='none';ring.style.display='none';},1200);
   player.style.opacity='1';
-
   if(!started){
     const msg='{"event":"command","func":"playVideo","args":""}';
     player.contentWindow.postMessage(msg,'*');
     started=true;
-
     /* fade from black → mint between 2:30–2:47 (150–167 s) */
     setTimeout(()=>{
       document.body.style.animation='fadeToMint 17s linear forwards, lumipulse 180s ease-in-out infinite alternate';
     },150000);
-
-    /* reveal Motion link at 3 min 15 s */
+    /* show Motion link after 3 min 15 s */
     setTimeout(()=>{motion.classList.add('show');},195000);
-
-    /* reveal Mint-Night Mantra 15 s later */
-    setTimeout(()=>{mantra.classList.add('show');},210000);
   }
 });
 </script>
+
 </body>
 </html>

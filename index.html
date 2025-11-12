@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dagny.plnt.earth</title>
+<title>dagny.plnt.earth — Bye Bye Baby</title>
 
-<!-- 🖤 Always-dark address bar -->
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
@@ -17,11 +16,11 @@ html,body{
   margin:0;
   height:100%;
   width:100%;
-  background:linear-gradient(to bottom,#ff9e7f 0%,#ffb7a1 50%,#ffe9c5 100%);
+  background:#000;
   background-size:200% 200%;
   background-repeat:no-repeat;
   background-attachment:fixed;
-  animation:daylight 90s ease-in-out infinite alternate, lumipulse 180s ease-in-out infinite alternate;
+  animation:lumipulse 180s ease-in-out infinite alternate;
   color-scheme:dark;
   color:#222;
   font-family:'Helvetica Neue',sans-serif;
@@ -35,57 +34,24 @@ html,body{
   transition:background 1.5s ease-in-out,color 1.5s ease-in-out;
 }
 
-/* ✨ animated daylight flow */
-@keyframes daylight{
-  0%   {background-position:0% 0%; background-color:#ff9e7f;}
-  25%  {background-position:50% 25%; background-color:#ffd4a1;}
-  50%  {background-position:100% 50%; background-color:#fff4e1;}
-  75%  {background-position:50% 75%; background-color:#ffd4a1;}
-  100% {background-position:0% 100%; background-color:#ff9e7f;}
+/* fade to Dagny mint */
+@keyframes fadeToMint{
+  from{background-color:#000;}
+  to{background-color:#a8f1d3;}
 }
 
-/* night mode */
-body.night{
-  background:linear-gradient(to bottom,#100019 0%,#2d0050 40%,#ff4f91 100%);
-  background-size:200% 200%;
-  animation:nightlight 90s ease-in-out infinite alternate, lumipulse 180s ease-in-out infinite alternate;
-  color:#ffe6f1;
-}
-@keyframes nightlight{
-  0%   {background-position:0% 0%; background-color:#100019;}
-  50%  {background-position:100% 50%; background-color:#4d0055;}
-  100% {background-position:0% 100%; background-color:#ff4f91;}
-}
-
-/* ✨ Dagny luminosity pulse */
-@keyframes lumipulse {
-  0%   { filter: brightness(1.00); }
-  25%  { filter: brightness(1.08); }
-  50%  { filter: brightness(1.15); }
-  75%  { filter: brightness(1.08); }
-  100% { filter: brightness(1.00); }
+/* luminosity pulse */
+@keyframes lumipulse{
+  0%{filter:brightness(1);}
+  50%{filter:brightness(1.1);}
+  100%{filter:brightness(1);}
 }
 
 /* text */
 h1{font-weight:600;font-size:1.3rem;margin:1rem 0 0.5rem 0;}
 p{font-style:italic;opacity:0.8;margin:0 1rem 2rem 1rem;}
 
-/* backdrop shimmer */
-.wave{
-  position:absolute;
-  bottom:-10%;
-  left:0;
-  width:200%;
-  height:200%;
-  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.3),transparent 70%);
-  animation:shimmer 16s linear infinite;
-  background-size:200% 100%;
-  transform:rotate(10deg);
-  opacity:0.15;
-}
-@keyframes shimmer{0%{background-position:0 0;}100%{background-position:200% 0;}}
-
-/* pulsing ring — synced with light */
+/* pulsing ring */
 .ring{
   position:absolute;
   width:120px;height:120px;
@@ -126,15 +92,6 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
   position:relative;
   z-index:0;
 }
-#player::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at center,rgba(255,255,255,0.15),transparent 70%);
-  border-radius:12px;
-  pointer-events:none;
-  z-index:-1;
-}
 
 /* Motion message */
 #motion{
@@ -144,52 +101,28 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
   font-size:1.05rem;
   font-weight:500;
   letter-spacing:0.4px;
-  background:linear-gradient(90deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.6) 50%,rgba(255,255,255,0.1) 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-size:200% 100%;
+  color:#222;
   transition:opacity 6s ease-in;
 }
-#motion.show{animation:textshine 4s linear forwards;}
-@keyframes textshine{from{background-position:-100% 0;}to{background-position:100% 0;}}
-#motion a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.3);}
-#motion a:hover{border-bottom:1px solid currentColor;}
-
-/* bright night toggle */
-#night-toggle{
-  position:fixed;
-  top:1rem;
-  right:1rem;
-  width:40px;height:40px;
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 30%,#fff,#ffd6e8 40%,#ff7fbf 100%);
-  box-shadow:0 0 20px rgba(255,200,255,0.6);
-  cursor:pointer;
-  border:none;
-  z-index:10;
-  transition:transform 0.3s ease;
+#motion.show{opacity:1;}
+#motion a{
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
 }
-#night-toggle:hover{transform:scale(1.1);}
-body.night #night-toggle{
-  background:radial-gradient(circle at 70% 70%,#ff80bf,#d000ff 60%,#260033 100%);
-  box-shadow:0 0 30px rgba(255,100,200,0.8);
-}
+#motion a:hover{border-bottom:1px solid #222;}
 </style>
 </head>
 <body>
-<div class="wave"></div>
-
-<button id="night-toggle" title="Toggle Dagny Night"></button>
-
-<h1>Dagny’s Joy</h1>
-<p>I remember how to move again.<br>Sunlight in rhythm, breath in color.</p>
+<h1>Dagny — Bye Bye Baby</h1>
+<p>I begin to move again.<br>Mint breath in rhythm.</p>
 
 <div class="ring"></div>
 <button id="play">▶︎</button>
 
 <iframe
   id="player"
-  src="https://www.youtube.com/embed/bnQBqinwlwQ?enablejsapi=1&loop=1&playlist=bnQBqinwlwQ&modestbranding=1&rel=0"
+  src="https://www.youtube.com/embed/KSzCwOtWI-s?enablejsapi=1&loop=1&playlist=KSzCwOtWI-s&modestbranding=1&rel=0"
   allow="autoplay; encrypted-media"
   allowfullscreen>
 </iframe>
@@ -201,7 +134,6 @@ const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
 const motion=document.getElementById('motion');
-const toggle=document.getElementById('night-toggle');
 let started=false;
 
 playBtn.addEventListener('click',()=>{
@@ -209,19 +141,20 @@ playBtn.addEventListener('click',()=>{
   ring.style.opacity='0';
   setTimeout(()=>{playBtn.style.display='none';ring.style.display='none';},1200);
   player.style.opacity='1';
+
   if(!started){
     const msg='{"event":"command","func":"playVideo","args":""}';
     player.contentWindow.postMessage(msg,'*');
     started=true;
-    setTimeout(()=>{
-      motion.style.opacity='1';
-      motion.classList.add('show');
-    },195000); // show Motion link after one loop
-  }
-});
 
-toggle.addEventListener('click',()=>{
-  document.body.classList.toggle('night');
+    /* fade to mint between 2:30–2:47 (150–167 s) */
+    setTimeout(()=>{
+      document.body.style.animation='fadeToMint 17s linear forwards, lumipulse 180s ease-in-out infinite alternate';
+    },150000);
+
+    /* show motion link after 3 min 15 s (195 s) */
+    setTimeout(()=>{motion.classList.add('show');},195000);
+  }
 });
 </script>
 </body>

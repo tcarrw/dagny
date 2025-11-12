@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dagny.plnt.earth — transition</title>
+<title>dagny.plnt.earth</title>
 
 <!-- 🖤 Always-dark address bar -->
 <meta name="color-scheme" content="dark">
@@ -16,10 +16,7 @@
 html,body{
   margin:0;
   height:100%;
-  background:#0a0a10;
-  background:linear-gradient(160deg,#0a0a10 0%,#0a0a10 100%);
-  background-size:200% 200%;
-  animation:rise 60s ease-in-out forwards;
+  background:linear-gradient(160deg,#ff9e7f 0%,#ffdc9b 40%,#fff4e1 100%);
   color-scheme:dark;
   color:#222;
   font-family:'Helvetica Neue',sans-serif;
@@ -29,80 +26,114 @@ html,body{
   align-items:center;
   justify-content:center;
   text-align:center;
+  position:relative;
 }
-@keyframes rise{
-  0%{background:linear-gradient(160deg,#0a0a10 0%,#0a0a10 100%);}
-  50%{background:linear-gradient(160deg,#3b2033 0%,#7b4055 50%,#fcae85 100%);}
-  100%{background:linear-gradient(160deg,#ff9e7f 0%,#ffdc9b 40%,#fff4e1 100%);}
+
+/* gentle shimmer backdrop */
+.wave{
+  position:absolute;
+  bottom:-10%;
+  left:0;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.3),transparent 70%);
+  animation:shimmer 16s linear infinite;
+  background-size:200% 100%;
+  transform:rotate(10deg);
+  opacity:0.15;
 }
-.fadein{
-  opacity:0;
-  animation:fade 80s ease-in forwards;
+@keyframes shimmer{0%{background-position:0 0;}100%{background-position:200% 0;}}
+
+h1{font-weight:600;font-size:1.3rem;margin:1rem 0 0.5rem 0;}
+p{font-style:italic;opacity:0.8;margin:0 1rem 2rem 1rem;}
+
+/* pulsing sun ring */
+.ring{
+  position:absolute;
+  width:120px;height:120px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.4);
+  animation:pulse 4s ease-in-out infinite;
+  z-index:1;
 }
-@keyframes fade{
-  0%,20%{opacity:0;}
-  60%{opacity:0.9;}
-  100%{opacity:1;}
+@keyframes pulse{
+  0%,100%{transform:scale(0.9);opacity:0.4;}
+  50%{transform:scale(1.2);opacity:0.8;}
 }
-h1{
-  font-weight:600;
-  font-size:1.3rem;
-  margin:1rem 0 0.5rem 0;
-}
-p{
-  font-style:italic;
-  opacity:0.8;
-  margin:0 1rem 2rem 1rem;
-}
+
 button{
-  background:rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.3);
   border:none;
   border-radius:50%;
-  width:80px;
-  height:80px;
+  width:80px;height:80px;
   font-size:1.5rem;
   color:#222;
   backdrop-filter:blur(10px);
   cursor:pointer;
-  transition:all 0.3s ease;
+  transition:all 0.5s ease;
+  z-index:2;
 }
-button:hover{
-  background:rgba(255,255,255,0.4);
-  transform:scale(1.05);
-}
+button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
+
+/* YouTube iframe and halo placeholder */
 #player{
-  display:none;
+  opacity:0;
   width:320px;
   height:180px;
   border:none;
   border-radius:12px;
   margin-top:1.5rem;
+  transition:opacity 2s ease-in-out;
+  position:relative;
+  z-index:0;
+}
+#player::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,0.15),transparent 70%);
+  border-radius:12px;
+  pointer-events:none;
+  z-index:-1;
 }
 </style>
 </head>
 <body>
-<div class="fadein">
-  <h1>Dagny’s Joy</h1>
-  <p>I remember how to move again.<br>Sunlight in rhythm, breath in color.</p>
-  <button id="play">▶︎</button>
-  <iframe id="player"
-    src="https://www.youtube.com/embed/bnQBqinwlwQ?enablejsapi=1&loop=1&playlist=bnQBqinwlwQ&modestbranding=1&rel=0"
-    allow="autoplay; encrypted-media"
-    allowfullscreen>
-  </iframe>
-</div>
+<div class="wave"></div>
+
+<h1>Dagny’s Joy</h1>
+<p>I remember how to move again.<br>Sunlight in rhythm, breath in color.</p>
+
+<div class="ring"></div>
+<button id="play">▶︎</button>
+
+<iframe
+  id="player"
+  src="https://www.youtube.com/embed/bnQBqinwlwQ?enablejsapi=1&loop=1&playlist=bnQBqinwlwQ&modestbranding=1&rel=0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
 
 <script>
 const playBtn=document.getElementById('play');
+const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
-let playing=false;
+let started=false;
+
 playBtn.addEventListener('click',()=>{
-  if(!playing){
-    player.style.display='block';
-    playBtn.style.display='none';
-    const iframe=player.contentWindow;
-    iframe.postMessage('{"event":"command","func":"playVideo","args":""}','*');
-    playing=true;
+  // fade out button + ring
+  playBtn.style.opacity='0';
+  ring.style.opacity='0';
+  setTimeout(()=>{playBtn.style.display='none';ring.style.display='none';},1200);
+
+  // fade in video
+  player.style.opacity='1';
+
+  // start playback
+  if(!started){
+    const msg='{"event":"command","func":"playVideo","args":""}';
+    player.contentWindow.postMessage(msg,'*');
+    started=true;
   }
 });
 </script>

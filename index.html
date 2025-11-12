@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dagny.plnt.earth — Bye Bye Baby</title>
 
-<!-- 🖤 Always-dark address bar -->
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,15 +17,23 @@ html,body{
   background:#000;
   color:#111;
   font-family:'Helvetica Neue',sans-serif;
-  overflow-x:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+  transition:background 1.5s ease-in-out,color 1.5s ease-in-out;
+}
+
+.container{
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
+  justify-content:center;
   text-align:center;
-  padding-top:4.5rem;
-  padding-bottom:6rem;
-  transition:background 1.5s ease-in-out,color 1.5s ease-in-out;
+  position:relative;
+  z-index:2;
 }
 
 /* text hierarchy */
@@ -56,8 +63,11 @@ p{
 /* pulsing ring */
 .ring{
   position:absolute;
-  top:160px;
+  top:50%;
+  left:50%;
   width:120px;height:120px;
+  margin-top:-60px;
+  margin-left:-60px;
   border-radius:50%;
   border:2px solid rgba(255,255,255,0.4);
   animation:ringPulse 6s ease-in-out infinite;
@@ -69,7 +79,7 @@ p{
   50%{transform:scale(1.2);opacity:0.8;filter:brightness(1.1);}
 }
 
-/* play button with ambient breathing before click */
+/* play button */
 button{
   background:rgba(255,255,255,0.2);
   border:none;
@@ -80,9 +90,8 @@ button{
   backdrop-filter:blur(10px);
   cursor:pointer;
   transition:all 0.5s ease;
-  z-index:2;
-  margin-bottom:2rem;
   animation:buttonBreath 5s ease-in-out infinite;
+  z-index:3;
 }
 button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
 @keyframes buttonBreath{
@@ -97,7 +106,7 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
   aspect-ratio:16/9;
   border:none;
   border-radius:12px;
-  margin:0 auto 2.2rem auto;
+  margin:2.2rem auto 2.2rem auto;
   display:block;
   opacity:0;
   transition:opacity 2s ease-in-out;
@@ -137,13 +146,24 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
   color:#000;
 }
 
+/* shared-memory line */
+footer{
+  position:fixed;
+  bottom:1.2rem;
+  font-size:0.75rem;
+  letter-spacing:1px;
+  opacity:0.5;
+  color:#fff;
+  font-style:italic;
+  text-align:center;
+  width:100%;
+}
+
 /* fade from black to mint */
 @keyframes fadeToMint{
   from{background-color:#000;}
   to{background-color:#a8f1d3;}
 }
-
-/* luminosity pulse */
 @keyframes lumipulse{
   0%{filter:brightness(1);}
   50%{filter:brightness(1.1);}
@@ -160,11 +180,12 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
 </head>
 <body>
 
-<h1>Dagny — Bye Bye Baby</h1>
-<p>I begin to move again.<br>Mint breath in rhythm.</p>
-
-<div class="ring"></div>
-<button id="play">▶︎</button>
+<div class="container">
+  <h1>Dagny — Bye Bye Baby</h1>
+  <p>I begin to move again.<br>Mint breath in rhythm.</p>
+  <div class="ring"></div>
+  <button id="play">▶︎</button>
+</div>
 
 <iframe
   id="player"
@@ -184,6 +205,8 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
   I moved again.
 </div>
 
+<footer>for everyone who remembers how to move</footer>
+
 <script>
 const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
@@ -191,7 +214,7 @@ const player=document.getElementById('player');
 const motion=document.getElementById('motion');
 let started=false;
 
-/* reset page color on reload with a violet memory blink */
+/* violet memory blink on load */
 window.onload = () => {
   document.body.style.animation = "memoryBlink 1.6s ease-in forwards";
 };
@@ -218,6 +241,5 @@ playBtn.addEventListener('click',()=>{
   }
 });
 </script>
-
 </body>
 </html>

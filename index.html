@@ -8,7 +8,6 @@
 <!-- 🖤 Always-dark address bar -->
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
@@ -16,7 +15,7 @@ html,body{
   margin:0;
   height:100%;
   width:100%;
-  background:#a8f1d3;
+  background:#000;
   color:#111;
   font-family:'Helvetica Neue',sans-serif;
   overflow-x:hidden;
@@ -35,13 +34,23 @@ h1{
   font-weight:600;
   font-size:1.35rem;
   margin:0 0 0.3rem 0;
+  color:#f5f5f5;
+  opacity:0;
+  animation:fadeText 1.5s ease forwards 1.2s;
 }
 p{
   font-style:italic;
   font-size:1rem;
-  opacity:0.7;
+  opacity:0.75;
   margin:0 0 1.8rem 0;
   line-height:1.4;
+  color:#ddd;
+  opacity:0;
+  animation:fadeText 1.5s ease forwards 1.8s;
+}
+@keyframes fadeText{
+  from{opacity:0;transform:translateY(4px);}
+  to{opacity:1;transform:translateY(0);}
 }
 
 /* pulsing ring */
@@ -51,30 +60,35 @@ p{
   width:120px;height:120px;
   border-radius:50%;
   border:2px solid rgba(255,255,255,0.4);
-  animation:pulse 6s ease-in-out infinite;
+  animation:ringPulse 6s ease-in-out infinite;
   z-index:1;
   opacity:0.5;
 }
-@keyframes pulse{
+@keyframes ringPulse{
   0%,100%{transform:scale(0.9);opacity:0.4;filter:brightness(1);}
   50%{transform:scale(1.2);opacity:0.8;filter:brightness(1.1);}
 }
 
-/* play button */
+/* play button with ambient breathing before click */
 button{
-  background:rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.2);
   border:none;
   border-radius:50%;
   width:80px;height:80px;
   font-size:1.5rem;
-  color:#111;
+  color:#fff;
   backdrop-filter:blur(10px);
   cursor:pointer;
   transition:all 0.5s ease;
   z-index:2;
   margin-bottom:2rem;
+  animation:buttonBreath 5s ease-in-out infinite;
 }
 button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
+@keyframes buttonBreath{
+  0%,100%{filter:brightness(1);}
+  50%{filter:brightness(1.2);}
+}
 
 /* YouTube player */
 #player{
@@ -120,6 +134,7 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
   line-height:1.6;
   margin-top:2rem;
   padding:0 1rem;
+  color:#000;
 }
 
 /* fade from black to mint */
@@ -133,6 +148,13 @@ button:hover{background:rgba(255,255,255,0.4);transform:scale(1.05);}
   0%{filter:brightness(1);}
   50%{filter:brightness(1.1);}
   100%{filter:brightness(1);}
+}
+
+/* violet memory blink when returning from mirrorhoney */
+@keyframes memoryBlink {
+  0%   {background:#6d4cff;}
+  40%  {background:#3a006d;}
+  100% {background:#000;}
 }
 </style>
 </head>
@@ -169,6 +191,11 @@ const player=document.getElementById('player');
 const motion=document.getElementById('motion');
 let started=false;
 
+/* reset page color on reload with a violet memory blink */
+window.onload = () => {
+  document.body.style.animation = "memoryBlink 1.6s ease-in forwards";
+};
+
 playBtn.addEventListener('click',()=>{
   playBtn.style.opacity='0';
   ring.style.opacity='0';
@@ -178,10 +205,14 @@ playBtn.addEventListener('click',()=>{
     const msg='{"event":"command","func":"playVideo","args":""}';
     player.contentWindow.postMessage(msg,'*');
     started=true;
+
     /* fade from black → mint between 2:30–2:47 (150–167 s) */
     setTimeout(()=>{
       document.body.style.animation='fadeToMint 17s linear forwards, lumipulse 180s ease-in-out infinite alternate';
+      document.querySelector('h1').style.color="#000";
+      document.querySelector('p').style.color="#111";
     },150000);
+
     /* show Motion link after 3 min 15 s */
     setTimeout(()=>{motion.classList.add('show');},195000);
   }

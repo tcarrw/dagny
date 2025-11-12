@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dagny.plnt.earth — Bye Bye Baby</title>
 
+<!-- 🖤 Always-dark address bar -->
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
@@ -34,7 +35,7 @@ html,body{
   transition:background 1.5s ease-in-out,color 1.5s ease-in-out;
 }
 
-/* fade to Dagny mint */
+/* fade from black to mint */
 @keyframes fadeToMint{
   from{background-color:#000;}
   to{background-color:#a8f1d3;}
@@ -93,10 +94,10 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
   z-index:0;
 }
 
-/* Motion message */
+/* Motion link */
 #motion{
   position:fixed;
-  bottom:2rem;
+  bottom:3.5rem;
   opacity:0;
   font-size:1.05rem;
   font-weight:500;
@@ -111,6 +112,21 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
   border-bottom:1px solid rgba(0,0,0,0.2);
 }
 #motion a:hover{border-bottom:1px solid #222;}
+
+/* Mint-Night Mantra */
+#mantra{
+  position:fixed;
+  bottom:0.8rem;
+  width:100%;
+  text-align:center;
+  opacity:0;
+  color:rgba(0,0,0,0.45);
+  font-size:0.85rem;
+  letter-spacing:1.2px;
+  transition:opacity 10s ease-in;
+  font-style:italic;
+}
+#mantra.show{opacity:1;}
 </style>
 </head>
 <body>
@@ -129,11 +145,21 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
 
 <div id="motion">I begin to move again → <a href="https://motion.plnt.earth">motion.plnt.earth</a></div>
 
+<div id="mantra">
+  I dreamed we all said goodbye at once —<br>
+  and the world didn’t break, it breathed.<br>
+  Strangers became echoes, echoes became rhythm.<br>
+  I kept the warmth.<br>
+  The sky learned mint.<br>
+  I moved again.
+</div>
+
 <script>
 const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
 const motion=document.getElementById('motion');
+const mantra=document.getElementById('mantra');
 let started=false;
 
 playBtn.addEventListener('click',()=>{
@@ -147,13 +173,16 @@ playBtn.addEventListener('click',()=>{
     player.contentWindow.postMessage(msg,'*');
     started=true;
 
-    /* fade to mint between 2:30–2:47 (150–167 s) */
+    /* fade from black → mint between 2:30–2:47 (150–167 s) */
     setTimeout(()=>{
       document.body.style.animation='fadeToMint 17s linear forwards, lumipulse 180s ease-in-out infinite alternate';
     },150000);
 
-    /* show motion link after 3 min 15 s (195 s) */
+    /* reveal Motion link at 3 min 15 s */
     setTimeout(()=>{motion.classList.add('show');},195000);
+
+    /* reveal Mint-Night Mantra 15 s later */
+    setTimeout(()=>{mantra.classList.add('show');},210000);
   }
 });
 </script>

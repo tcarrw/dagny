@@ -152,12 +152,14 @@ footer{
   bottom:1.2rem;
   font-size:0.75rem;
   letter-spacing:1px;
-  opacity:0.5;
+  opacity:0;
   color:#fff;
   font-style:italic;
   text-align:center;
   width:100%;
+  transition:opacity 4s ease-in;
 }
+footer.show{opacity:0.6;}
 
 /* fade from black to mint */
 @keyframes fadeToMint{
@@ -205,13 +207,14 @@ footer{
   I moved again.
 </div>
 
-<footer>for everyone who remembers how to move</footer>
+<footer id="footer">for everyone who remembers how to move</footer>
 
 <script>
 const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
 const motion=document.getElementById('motion');
+const footer=document.getElementById('footer');
 let started=false;
 
 /* violet memory blink on load */
@@ -236,7 +239,10 @@ playBtn.addEventListener('click',()=>{
       document.querySelector('p').style.color="#111";
     },150000);
 
-    /* show Motion link after 3 min 15 s */
+    /* show footer at 3:00 (180 s) */
+    setTimeout(()=>{footer.classList.add('show');},180000);
+
+    /* show Motion link after 3:15 (195 s) */
     setTimeout(()=>{motion.classList.add('show');},195000);
   }
 });

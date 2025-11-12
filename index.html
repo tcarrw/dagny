@@ -29,7 +29,7 @@ html,body{
   position:relative;
 }
 
-/* gentle shimmer backdrop */
+/* background shimmer */
 .wave{
   position:absolute;
   bottom:-10%;
@@ -47,7 +47,7 @@ html,body{
 h1{font-weight:600;font-size:1.3rem;margin:1rem 0 0.5rem 0;}
 p{font-style:italic;opacity:0.8;margin:0 1rem 2rem 1rem;}
 
-/* pulsing sun ring */
+/* pulsing ring */
 .ring{
   position:absolute;
   width:120px;height:120px;
@@ -75,7 +75,7 @@ button{
 }
 button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
 
-/* YouTube iframe and halo placeholder */
+/* video + halo */
 #player{
   opacity:0;
   width:320px;
@@ -90,11 +90,41 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
 #player::before{
   content:'';
   position:absolute;
-  top:0;left:0;right:0;bottom:0;
+  inset:0;
   background:radial-gradient(circle at center,rgba(255,255,255,0.15),transparent 70%);
   border-radius:12px;
   pointer-events:none;
   z-index:-1;
+}
+
+/* Motion message */
+#motion{
+  position:fixed;
+  bottom:2rem;
+  opacity:0;
+  font-size:1.05rem;
+  font-weight:500;
+  letter-spacing:0.4px;
+  background:linear-gradient(90deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.6) 50%,rgba(255,255,255,0.1) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-size:200% 100%;
+  transition:opacity 6s ease-in;
+}
+#motion.show{
+  animation:textshine 4s linear forwards;
+}
+@keyframes textshine{
+  from{background-position:-100% 0;}
+  to{background-position:100% 0;}
+}
+#motion a{
+  color:#222;
+  text-decoration:none;
+  border-bottom:1px solid rgba(0,0,0,0.2);
+}
+#motion a:hover{
+  border-bottom:1px solid #222;
 }
 </style>
 </head>
@@ -114,26 +144,30 @@ button:hover{background:rgba(255,255,255,0.45);transform:scale(1.05);}
   allowfullscreen>
 </iframe>
 
+<div id="motion">I begin to move again → <a href="https://motion.plnt.earth">motion.plnt.earth</a></div>
+
 <script>
 const playBtn=document.getElementById('play');
 const ring=document.querySelector('.ring');
 const player=document.getElementById('player');
+const motion=document.getElementById('motion');
 let started=false;
 
 playBtn.addEventListener('click',()=>{
-  // fade out button + ring
   playBtn.style.opacity='0';
   ring.style.opacity='0';
   setTimeout(()=>{playBtn.style.display='none';ring.style.display='none';},1200);
 
-  // fade in video
   player.style.opacity='1';
-
-  // start playback
   if(!started){
     const msg='{"event":"command","func":"playVideo","args":""}';
     player.contentWindow.postMessage(msg,'*');
     started=true;
+    // show Motion link after one loop (~195 s)
+    setTimeout(()=>{
+      motion.style.opacity='1';
+      motion.classList.add('show');
+    },195000);
   }
 });
 </script>
